@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Meditation</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="meditation-content">
+  <div class="meditation-container">
+    <h2>Time to Meditate</h2>
+
+    <!-- Timer Display -->
+    <div class="timer">
+      <span>{{ minutes | number: '2.0' }} : {{ seconds | number: '2.0' }}</span>
+    </div>
+
+    <ion-button expand="full" (click)="startTimer()" [disabled]="isTimerRunning" color="primary">
+      Start Meditation
+    </ion-button>
+
+    <ion-button expand="full" (click)="resetTimer()" color="danger" [disabled]="!isTimerRunning">
+      Reset Timer
+    </ion-button>
+  </div>
+</ion-content>

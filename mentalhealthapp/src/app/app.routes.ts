@@ -19,6 +19,10 @@ export const routes: Routes = [
     loadComponent: () => import('./journal/journal.page').then( m => m.JournalPage)
   },
   {
+  path: 'meditation',
+  loadComponent: () => import('./meditation/meditation.page').then( m => m.MeditationPage)
+  },  
+  {
     path: 'settings',
     loadComponent: () => import('./settings/settings.page').then( m => m.SettingsPage)
   },

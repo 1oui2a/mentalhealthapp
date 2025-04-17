@@ -1,0 +1,33 @@
+.meditation-content {
+    background-color: #f0f0f0; /* Light grey for background */
+  }
+  
+  .meditation-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #4CAF50; /* Calming green */
+  }
+  
+  .timer {
+    font-size: 48px;
+    margin-bottom: 20px;
+    color: #2196F3; /* Blue for tranquility */
+  }
+  
+  ion-button {
+    margin-top: 20px;
+    border-radius: 8px;
+  }
+  
+  ion-button:disabled {
+    opacity: 0.5;
+  }
+  
