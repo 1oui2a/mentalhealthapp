@@ -1,13 +1,26 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>mood</ion-title>
+    <ion-title>Mood Picker</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-content>
+  <ion-card *ngFor="let mood of moods" 
+            [ngStyle]="{'background-color': getMoodColour(mood)}"
+            (click)="selectMood(mood)">
+    <ion-card-header>
+      <ion-card-title>{{ mood }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Swipe or tap to select your mood for today.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-footer>
     <ion-toolbar>
-      <ion-title size="large">mood</ion-title>
+      <ion-title>
+        Selected Mood: {{ selectedMood || 'None' }}
+      </ion-title>
     </ion-toolbar>
-  </ion-header>
+  </ion-footer>
 </ion-content>
