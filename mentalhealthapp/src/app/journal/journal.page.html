@@ -1,13 +1,25 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>journal</ion-title>
+    <ion-title>Journal</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">journal</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <h2>Welcome to your Journal!</h2>
+
+  <ion-item>
+    <ion-label position="stacked">Write your entry</ion-label>
+    <ion-textarea [(ngModel)]="journalEntry" placeholder="Type your thoughts..."></ion-textarea>
+  </ion-item>
+
+  <ion-button expand="full" (click)="saveJournalEntry()">Save Entry</ion-button>
+
+  <div *ngIf="entries.length > 0">
+    <h3>Your Journal Entries</h3>
+    <ul>
+      <li *ngFor="let entry of entries">
+        {{ entry }}
+      </li>
+    </ul>
+  </div>
 </ion-content>
