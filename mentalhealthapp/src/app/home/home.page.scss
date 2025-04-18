@@ -25,3 +25,30 @@
 #container a {
   text-decoration: none;
 }
+
+ion-card {
+  border-radius: 30px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+  
+}
+
+.home-card1 {
+  background: linear-gradient(180deg, #ffecec 0%, #ff9898 100%);
+}
+.home-card2 {
+  background: linear-gradient(180deg, #e6f7ff 0%, #91d5ff 100%);
+}
+.home-card3 {
+  background: linear-gradient(180deg, #f6ffed 0%, #95de64 100%);
+}
+
+ion-card-header {
+  text-align: center;
+  
+}
+
+ion-card-content {
+  text-align: center;
+  font-size: 16px;
+  color: #000000;
+}
