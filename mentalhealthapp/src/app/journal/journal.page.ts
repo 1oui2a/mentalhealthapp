@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, IonTextarea, IonButton } from '@ionic/angular/standalone'; // Make sure to import these components!
 import { CommonModule } from '@angular/common'; // Import CommonModule for ngIf and ngFor
 import { FormsModule } from '@angular/forms'; // Import FormsModule for ngModel
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-journal',
   templateUrl: './journal.page.html',
   styleUrls: ['./journal.page.scss'],
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, IonTextarea, 
-    IonButton, CommonModule, FormsModule], // Add these imports here
+    IonButton, CommonModule, FormsModule, HttpClient], // Add these imports here
 })
 export class JournalPage {
   journalEntry: string = '';  // To hold the current journal entry text

@@ -1,4 +1,10 @@
 import { Routes } from '@angular/router';
+import { HomePage } from './home/home.page';
+import { MoodPage } from './mood/mood.page';
+import { JournalPage } from './journal/journal.page';
+import { MeditationPage } from './meditation/meditation.page';
+import { SettingsPage } from './settings/settings.page';
+import { HttpClient } from '@angular/common/http';
 
 export const routes: Routes = [
   {
