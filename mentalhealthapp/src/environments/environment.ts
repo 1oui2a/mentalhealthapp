@@ -5,15 +5,18 @@
 export const environment = {
   production: false,
   firebase: {
-    projectId: 'mentalhealthapp-3398a',
-    appId: '1:202726996509:android:9fb9413b5254950a6d24f4',
-    storageBucket: '',
-    locationId: '',
-    apiKey: '',
-    authDomain: '',
-    messagingSenderId: '',
+      apiKey: "AIzaSyC0p5q-At6ehzbWES_Z8KRjNt535Mx0OUQ",
+      authDomain: "mentalhealthappweb.firebaseapp.com",
+      projectId: "mentalhealthappweb",
+      storageBucket: "mentalhealthappweb.firebasestorage.app",
+      messagingSenderId: "153852057325",
+      appId: "1:153852057325:web:29328cd7ed713389ca5ee4",
+      measurementId: "G-3HMCE7DT6P"
+    
   },
 };
+
+
 
 /*
  * For easier debugging in development mode, you can import the following file
