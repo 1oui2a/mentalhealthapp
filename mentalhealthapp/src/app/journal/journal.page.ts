@@ -1,6 +1,6 @@
 // src/app/journal/journal.page.ts
-import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { AlertController, ModalController, IonicModule } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { AlertController } from '@ionic/angular';
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, 
   IonTextarea, IonButton, IonCard, IonCardHeader, IonCardTitle, 
@@ -10,21 +10,18 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { 
-  addOutline, 
   bookOutline, 
-  calendarOutline, 
-  timeOutline, 
-  trashOutline,
-  closeCircle
+  addOutline, 
+  closeCircle, 
+  calendarOutline,
+  timeOutline,
+  trashOutline
 } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { StorageService } from '../services/storage.service';
-// Correctly import using your file name
-import { JournalEntryModalComponent } from './journalentrymodal.component';
 
-// Define the interface for journal entries
 interface JournalEntry {
-  id: string;
+  id?: string;
   text: string;
   date: string;
   mood?: string;
@@ -36,15 +33,12 @@ interface JournalEntry {
   templateUrl: './journal.page.html',
   styleUrls: ['./journal.page.scss'],
   standalone: true,
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
-    IonicModule, // Add IonicModule for ModalController
     IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, 
     IonTextarea, IonButton, IonCard, IonCardHeader, IonCardTitle, 
     IonCardContent, IonChip, IonIcon, IonRippleEffect,
     IonSkeletonText, IonCardSubtitle, CommonModule, FormsModule,
-    JournalEntryModalComponent
-  ],
+  ]
 })
 export class JournalPage implements OnInit {
   journalEntry = '';
@@ -54,172 +48,164 @@ export class JournalPage implements OnInit {
   isLoading = true;
   moods = ['😊 Happy', '😢 Sad', '😴 Tired', '🤩 Excited', '😠 Angry', '😌 Calm'];
   
+  private readonly STORAGE_KEY = 'journalEntries';
+  
   constructor(
     private storageService: StorageService,
-    private alertController: AlertController,
-    private modalController: ModalController
+    private alertController: AlertController
   ) {
-    // Initialize icons - fixed to avoid duplicates
+    // Initialize icons
     addIcons({
-      'add-outline': addOutline,
       'book-outline': bookOutline,
+      'add-outline': addOutline,
+      'close-circle': closeCircle,
       'calendar-outline': calendarOutline,
       'time-outline': timeOutline,
-      'trash-outline': trashOutline,
-      'close-circle': closeCircle
+      'trash-outline': trashOutline
     });
   }
 
   async ngOnInit() {
-    try {
-      this.loadJournalEntries();
-    } catch (error) {
-      console.error('Error in ngOnInit:', error);
-      this.isLoading = false; // Make sure UI is still shown even if there's an error
-    }
+    this.loadJournalEntries();
   }
 
   async loadJournalEntries() {
     this.isLoading = true;
     try {
-      // Use typed storage service
-      const storedEntries = await this.storageService.get<string>('journalEntries');
-      
+      const storedEntries = await this.storageService.get<string>(this.STORAGE_KEY);
       if (storedEntries) {
         this.entries = JSON.parse(storedEntries);
-        // Sort entries by date (newest first)
+        // Sort by date (newest first)
         this.entries.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
       }
     } catch (error) {
-      console.error('Error loading journal entries:', error);
+      console.error('Error loading entries:', error);
     } finally {
       this.isLoading = false;
     }
   }
 
   async saveJournalEntry() {
+    if (this.journalEntry.trim() === '') {
+      this.presentAlert('Empty Entry', 'Please write something in your journal before saving.');
+      return;
+    }
+
+    const newEntry: JournalEntry = {
+      id: Date.now().toString(),
+      text: this.journalEntry,
+      date: new Date().toISOString(),
+      mood: this.currentMood,
+      tags: [...this.entryTags]
+    };
+
+    // Add to local entries
+    this.entries.unshift(newEntry);
+    await this.saveEntriesToStorage();
+    
+    // Reset form
+    this.journalEntry = '';
+    this.currentMood = '';
+    this.entryTags = [];
+    
+    this.presentAlert('Success', 'Your journal entry has been saved!');
+  }
+
+  private async saveEntriesToStorage() {
     try {
-      if (this.journalEntry.trim() === '') {
-        this.presentAlert('Empty Entry', 'Please write something in your journal before saving.');
-        return;
-      }
-
-      const newEntry: JournalEntry = {
-        id: Date.now().toString(),
-        text: this.journalEntry,
-        date: new Date().toISOString(),
-        mood: this.currentMood,
-        tags: [...this.entryTags]
-      };
-
-      this.entries.unshift(newEntry); // Add to beginning of array
-      
-      // Use typed storage service
-      await this.storageService.set<string>('journalEntries', JSON.stringify(this.entries));
-      
-      // Reset form
-      this.journalEntry = '';
-      this.currentMood = '';
-      this.entryTags = [];
-      
-      this.presentAlert('Success', 'Your journal entry has been saved!');
+      await this.storageService.set(this.STORAGE_KEY, JSON.stringify(this.entries));
     } catch (error) {
-      console.error('Error saving journal entry:', error);
-      this.presentAlert('Error', 'There was a problem saving your entry. Please try again.');
+      console.error('Error saving to storage:', error);
     }
   }
 
   async deleteEntry(entryId: string) {
-    try {
-      const alert = await this.alertController.create({
-        header: 'Confirm Deletion',
-        message: 'Are you sure you want to delete this journal entry? This action cannot be undone.',
-        buttons: [
-          {
-            text: 'Cancel',
-            role: 'cancel'
-          },
-          {
-            text: 'Delete',
-            role: 'destructive',
-            handler: async () => {
-              this.entries = this.entries.filter(entry => entry.id !== entryId);
-              await this.storageService.set<string>('journalEntries', JSON.stringify(this.entries));
+    const alert = await this.alertController.create({
+      header: 'Confirm Deletion',
+      message: 'Are you sure you want to delete this journal entry? This action cannot be undone.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: async () => {
+            const entryIndex = this.entries.findIndex(e => e.id === entryId);
+            if (entryIndex !== -1) {
+              this.entries.splice(entryIndex, 1);
+              await this.saveEntriesToStorage();
             }
           }
-        ]
-      });
+        }
+      ]
+    });
 
-      await alert.present();
-    } catch (error) {
-      console.error('Error deleting entry:', error);
-    }
+    await alert.present();
   }
 
-  async viewEntry(entry: JournalEntry) {
-    try {
-      const modal = await this.modalController.create({
-        component: JournalEntryModalComponent,
-        componentProps: {
-          entry: entry
-        },
-        cssClass: 'journal-modal'
-      });
-      return await modal.present();
-    } catch (error) {
-      console.error('Error viewing entry:', error);
-    }
+  // Add the missing viewEntry method
+  viewEntry(entry: JournalEntry) {
+    // For now, just show an alert with the entry content
+    this.presentAlert(
+      entry.mood || 'Journal Entry', 
+      entry.text
+    );
+  }
+
+  // Add the missing getPreviewText method
+  getPreviewText(text: string, maxLength = 100): string {
+    return text.length <= maxLength ? text : `${text.substring(0, maxLength)}...`;
   }
 
   async presentAlert(header: string, message: string) {
-    try {
-      const alert = await this.alertController.create({
-        header,
-        message,
-        buttons: ['OK']
-      });
+    const alert = await this.alertController.create({
+      header,
+      message,
+      buttons: ['OK']
+    });
 
-      await alert.present();
-    } catch (error) {
-      console.error('Error presenting alert:', error);
-    }
+    await alert.present();
   }
 
   setMood(mood: string) {
-    this.currentMood = mood;
+    this.currentMood = this.currentMood === mood ? '' : mood;
   }
 
-  async addTag() {
-    try {
-      const alert = await this.alertController.create({
-        header: 'Add Tag',
-        inputs: [
-          {
-            name: 'tag',
-            type: 'text',
-            placeholder: 'Enter tag name'
-          }
-        ],
-        buttons: [
-          {
-            text: 'Cancel',
-            role: 'cancel'
-          },
-          {
-            text: 'Add',
-            handler: (data) => {
-              if (data.tag.trim() !== '') {
-                this.entryTags.push(data.tag.trim());
-              }
+  addTag(tag: string) {
+    // You can implement a more sophisticated tag adding here
+    // For now, just prompt for a tag name
+    this.promptForTag();
+  }
+
+  async promptForTag() {
+    const alert = await this.alertController.create({
+      header: 'Add Tag',
+      inputs: [
+        {
+          name: 'tag',
+          type: 'text',
+          placeholder: 'Enter tag name'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel'
+        },
+        {
+          text: 'Add',
+          handler: (data) => {
+            if (data.tag.trim() !== '') {
+              this.entryTags.push(data.tag.trim());
             }
           }
-        ]
-      });
+        }
+      ]
+    });
 
-      await alert.present();
-    } catch (error) {
-      console.error('Error adding tag:', error);
-    }
+    await alert.present();
   }
 
   removeTag(index: number) {
@@ -235,10 +221,5 @@ export class JournalPage implements OnInit {
       hour: '2-digit',
       minute: '2-digit'
     });
-  }
-
-  getPreviewText(text: string, maxLength = 100): string {
-    // Using template literal instead of string concatenation
-    return text.length <= maxLength ? text : `${text.substring(0, maxLength)}...`;
   }
 }

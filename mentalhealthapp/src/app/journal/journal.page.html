@@ -68,7 +68,7 @@
             <ion-label>{{ tag }}</ion-label>
             <ion-icon name="close-circle"></ion-icon>
           </ion-chip>
-          <ion-button fill="clear" size="small" (click)="addTag()">
+          <ion-button fill="clear" size="small" (click)="addTag('newTag')">
             <ion-icon slot="icon-only" name="add-outline"></ion-icon>
           </ion-button>
         </div>
@@ -116,7 +116,7 @@
             color="danger" 
             size="small"
             class="delete-button"
-            (click)="$event.stopPropagation(); deleteEntry(entry.id)">
+            (click)="$event.stopPropagation(); deleteEntry(entry.id ?? '')">
             <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
           </ion-button>
         </ion-card-content>
