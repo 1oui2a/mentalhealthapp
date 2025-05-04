@@ -1,33 +1,182 @@
-.meditation-content {
-    background-color: #f0f0f0; /* Light grey for background */
+/* meditation.page.scss */
+ion-content {
+  --background: #2c1e56;
+  --color: white;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.meditation-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+/* Top bar with back button and title */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 10px;
+  
+  .session-title {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: white;
   }
   
-  .meditation-container {
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-  }
-  
-  h2 {
+  .back-button, .favorite-button {
+    --color: white;
+    --background: transparent;
     font-size: 24px;
-    margin-bottom: 20px;
-    color: #4CAF50; /* Calming green */
+  }
+}
+
+/* Meditation circle */
+.meditation-circle {
+  position: relative;
+  width: 80%;
+  height: 300px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 60px rgba(136, 111, 255, 0.3);
+    animation: pulse 4s infinite ease-in-out;
   }
   
-  .timer {
-    font-size: 48px;
-    margin-bottom: 20px;
-    color: #2196F3; /* Blue for tranquility */
+  &::after {
+    content: '';
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+/* Timer display */
+.timer-display {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-80px);
+  font-size: 24px;
+  font-weight: 300;
+  color: white;
+  letter-spacing: 1px;
+}
+
+/* Play/Pause button */
+.control-button {
+  z-index: 10;
+  
+  .pause-play-button {
+    --background: rgba(255, 255, 255, 0.1);
+    --border-radius: 50%;
+    --color: white;
+    height: 70px;
+    width: 70px;
+    font-size: 30px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    margin: 0;
+  }
+}
+
+/* Duration selector */
+.duration-selector {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 20px;
+  
+  .duration-button {
+    --background: rgba(255, 255, 255, 0.2);
+    --color: white;
+    --border-radius: 20px;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    font-size: 14px;
+    
+    &.active {
+      --background: rgba(255, 255, 255, 0.3);
+    }
+    
+    ion-icon {
+      margin-left: 5px;
+    }
+  }
+}
+
+/* Duration dropdown */
+.duration-dropdown {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(47, 38, 85, 0.95);
+  border-radius: 12px;
+  width: 200px;
+  z-index: 100;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  display: none;
+  
+  &.show-dropdown {
+    display: block;
   }
   
-  ion-button {
-    margin-top: 20px;
-    border-radius: 8px;
+  .dropdown-item {
+    padding: 12px 16px;
+    text-align: center;
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &:last-child {
+      border-bottom: none;
+    }
+    
+    &:active {
+      background: rgba(255, 255, 255, 0.1);
+    }
   }
-  
-  ion-button:disabled {
-    opacity: 0.5;
+}
+
+/* Animation */
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.7;
   }
-  
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.7;
+  }
+}
+
+/* Stars background */
+ion-content::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(white 1px, transparent 1px);
+  background-size: 50px 50px;
+  opacity: 0.1;
+  z-index: -1;
+}
