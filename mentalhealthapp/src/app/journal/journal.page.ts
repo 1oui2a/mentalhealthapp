@@ -9,13 +9,13 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './journal.page.html',
   styleUrls: ['./journal.page.scss'],
   imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, IonTextarea, 
-    IonButton, CommonModule, FormsModule, HttpClient], // Add these imports here
+    IonButton, CommonModule, FormsModule,], // Add these imports here
 })
 export class JournalPage {
-  journalEntry: string = '';  // To hold the current journal entry text
+  journalEntry = '';  // To hold the current journal entry text
   entries: string[] = [];  // To hold the list of saved journal entries
   
-  constructor() {}
+
 
 
 saveJournalEntry() {

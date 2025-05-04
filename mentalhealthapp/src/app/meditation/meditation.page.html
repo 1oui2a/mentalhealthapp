@@ -7,18 +7,55 @@
 <ion-content class="meditation-content">
   <div class="meditation-container">
     <h2>Time to Meditate</h2>
-
-    <!-- Timer Display -->
-    <div class="timer">
-      <span>{{ minutes | number: '2.0' }} : {{ seconds | number: '2.0' }}</span>
+<!-- meditation.page.html -->
+<ion-content class="ion-padding">
+  <div class="meditation-container">
+    <!-- Back button and session title -->
+    <div class="top-bar">
+      <ion-button fill="clear" class="back-button">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+      <div class="session-title">SESSION 01</div>
+      <ion-button fill="clear" class="favorite-button">
+        <ion-icon name="heart-outline"></ion-icon>
+      </ion-button>
     </div>
 
-    <ion-button expand="full" (click)="startTimer()" [disabled]="isTimerRunning" color="primary">
-      Start Meditation
-    </ion-button>
+    <!-- Visualization and timer -->
+    <div class="meditation-circle">
+      <div class="timer-display">
+        {{ formatTime() }}
+      </div>
+      
+      <!-- Pause/Play button -->
+      <div class="control-button">
+        <ion-button 
+          (click)="toggleTimer()" 
+          fill="clear" 
+          class="pause-play-button">
+          <ion-icon [name]="isTimerRunning ? 'pause' : 'play'"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
 
-    <ion-button expand="full" (click)="resetTimer()" color="danger" [disabled]="!isTimerRunning">
-      Reset Timer
-    </ion-button>
+    <!-- Duration selector -->
+    <div class="duration-selector">
+      <ion-button 
+        fill="clear" 
+        shape="round" 
+        class="duration-button" 
+        [class.active]="selectedDuration === 10">
+        {{ selectedDuration }} minutes
+        <ion-icon name="chevron-down-outline"></ion-icon>
+      </ion-button>
+    </div>
+
+    <!-- Duration dropdown (initially hidden) -->
+    <div class="duration-dropdown" [class.show-dropdown]="showDurationDropdown">
+      <div class="dropdown-item" (click)="selectDuration(1)">1 minute</div>
+      <div class="dropdown-item" (click)="selectDuration(3)">3 minutes</div>
+      <div class="dropdown-item" (click)="selectDuration(5)">5 minutes</div>
+      <div class="dropdown-item" (click)="selectDuration(10)">10 minutes</div>
+    </div>
   </div>
 </ion-content>
