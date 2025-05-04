@@ -3,7 +3,16 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase: {
+    projectId: 'mentalhealthapp-3398a',
+    appId: '1:202726996509:android:9fb9413b5254950a6d24f4',
+    storageBucket: '',
+    locationId: '',
+    apiKey: '',
+    authDomain: '',
+    messagingSenderId: '',
+  },
 };
 
 /*

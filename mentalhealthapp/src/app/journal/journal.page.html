@@ -1,25 +1,131 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Journal</ion-title>
+<!-- journal.page.html -->
+<ion-header class="ion-no-border">
+  <ion-toolbar color="light">
+    <ion-title class="ion-text-center">My Journal</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <h2>Welcome to your Journal!</h2>
+<ion-content class="ion-padding">
+  <!-- Loading skeleton -->
+  <div *ngIf="isLoading">
+    <ion-card>
+      <ion-card-header>
+        <ion-skeleton-text [animated]="true" style="width: 60%;"></ion-skeleton-text>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-skeleton-text [animated]="true" style="width: 100%; height: 100px;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+    <ion-card>
+      <ion-card-header>
+        <ion-skeleton-text [animated]="true" style="width: 40%;"></ion-skeleton-text>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-skeleton-text [animated]="true" style="width: 100%; height: 80px;"></ion-skeleton-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
 
-  <ion-item>
-    <ion-label position="stacked">Write your entry</ion-label>
-    <ion-textarea [(ngModel)]="journalEntry" placeholder="Type your thoughts..."></ion-textarea>
-  </ion-item>
+  <!-- Main content -->
+  <div *ngIf="!isLoading">
+    <!-- New journal entry form -->
+    <ion-card class="new-entry-card">
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">
+          <ion-icon name="book-outline"></ion-icon> New Journal Entry
+        </ion-card-title>
+        <ion-card-subtitle class="ion-text-center">
+          {{ currentMood ? currentMood : 'How are you feeling today?' }}
+        </ion-card-subtitle>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <!-- Mood selector -->
+        <div class="mood-selector">
+          <div 
+            *ngFor="let mood of moods" 
+            class="mood-item" 
+            [class.selected]="currentMood === mood"
+            (click)="setMood(mood)">
+            {{ mood }}
+          </div>
+        </div>
 
-  <ion-button expand="full" (click)="saveJournalEntry()">Save Entry</ion-button>
+        <!-- Entry textarea -->
+        <ion-item lines="none" class="textarea-item">
+          <ion-textarea
+            [(ngModel)]="journalEntry"
+            placeholder="What's on your mind today?"
+            [autoGrow]="true"
+            rows="5"
+            class="journal-textarea">
+          </ion-textarea>
+        </ion-item>
 
-  <div *ngIf="entries.length > 0">
-    <h3>Your Journal Entries</h3>
-    <ul>
-      <li *ngFor="let entry of entries">
-        {{ entry }}
-      </li>
-    </ul>
+        <!-- Tags -->
+        <div class="tags-container">
+          <ion-chip *ngFor="let tag of entryTags; let i = index" (click)="removeTag(i)">
+            <ion-label>{{ tag }}</ion-label>
+            <ion-icon name="close-circle"></ion-icon>
+          </ion-chip>
+          <ion-button fill="clear" size="small" (click)="addTag()">
+            <ion-icon slot="icon-only" name="add-outline"></ion-icon>
+          </ion-button>
+        </div>
+
+        <!-- Save button -->
+        <ion-button 
+          expand="block" 
+          color="primary" 
+          (click)="saveJournalEntry()"
+          class="save-button">
+          Save Entry
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Journal entries list -->
+    <div *ngIf="entries.length > 0" class="journal-entries-list">
+      <h2 class="section-title">
+        <ion-icon name="time-outline"></ion-icon>
+        Previous Entries
+      </h2>
+
+      <ion-card 
+        *ngFor="let entry of entries" 
+        class="entry-card ion-activatable ripple-parent"
+        (click)="viewEntry(entry)">
+        <ion-ripple-effect></ion-ripple-effect>
+        <ion-card-header>
+          <ion-card-subtitle>
+            <ion-icon name="calendar-outline"></ion-icon>
+            {{ getFormattedDate(entry.date) }}
+            <span *ngIf="entry.mood" class="mood-indicator">{{ entry.mood }}</span>
+          </ion-card-subtitle>
+          <ion-card-title class="entry-preview">{{ getPreviewText(entry.text) }}</ion-card-title>
+        </ion-card-header>
+        
+        <ion-card-content>
+          <div class="entry-tags" *ngIf="entry.tags && entry.tags.length > 0">
+            <ion-chip *ngFor="let tag of entry.tags" size="small" color="tertiary">
+              <ion-label>{{ tag }}</ion-label>
+            </ion-chip>
+          </div>
+          <ion-button 
+            fill="clear" 
+            color="danger" 
+            size="small"
+            class="delete-button"
+            (click)="$event.stopPropagation(); deleteEntry(entry.id)">
+            <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Empty state (should never show since we check entries.length > 0) -->
+      <div *ngIf="entries.length === 0" class="empty-state">
+        <p>You haven't written any journal entries yet.</p>
+      </div>
+    </div>
   </div>
 </ion-content>
