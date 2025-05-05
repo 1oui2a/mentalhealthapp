@@ -1,6 +1,6 @@
 Mental health app made using Ionic/Angular framework.
 
-Neccessary dependacies include @ionic/storage-angular for async storage, npm install @angular/fire firebase for firebase.
+npm install to make sure all dependancies are properly installed
 
 Technical Features
 
