@@ -1,54 +1,151 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+// Home page styling
+h1 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+h2 {
+  font-size: 1.4rem;
+  margin: 1.5rem 0 1rem;
+  font-weight: 500;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
+// Feature cards styling
+.feature-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 1.5rem 0;
 }
 
 ion-card {
-  border-radius: 30px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-  
+  margin: 0;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.home-card1 {
-  background: linear-gradient(180deg, #ffecec 0%, #ff9898 100%);
+.journal-card {
+  background: linear-gradient(135deg, #FFD3D3 0%, #FFA7A7 100%);
+  color: #333;
 }
-.home-card2 {
-  background: linear-gradient(180deg, #e6f7ff 0%, #91d5ff 100%);
+
+.mood-card {
+  background: linear-gradient(135deg, #D3E5FF 0%, #A7CAFF 100%);
+  color: #333;
 }
-.home-card3 {
-  background: linear-gradient(180deg, #f6ffed 0%, #95de64 100%);
+
+.meditation-card {
+  background: linear-gradient(135deg, #D8FFD3 0%, #B5FFA7 100%);
+  color: #333;
 }
 
 ion-card-header {
-  text-align: center;
-  
+  padding-bottom: 8px;
 }
 
 ion-card-content {
+  padding-top: 0;
+  padding-bottom: 16px;
+}
+
+// Recent journal entries styling
+.recent-entries {
+  margin: 2rem 0;
+}
+
+ion-list {
+  background: transparent;
+  padding: 0;
+}
+
+ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  margin-bottom: 8px;
+  --background: #f8f8f8;
+  border-radius: 12px;
+}
+
+.entry-preview {
+  margin-top: 6px;
+  color: #666;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.view-all {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.empty-state {
   text-align: center;
-  font-size: 16px;
-  color: #000000;
+  padding: 30px 20px;
+  background: #f8f8f8;
+  border-radius: 12px;
+  margin: 20px 0;
+}
+
+.empty-state p {
+  margin-bottom: 15px;
+  color: #666;
+}
+
+// Daily tip styling
+.daily-tip ion-card {
+  background: linear-gradient(135deg, #FFE8CC 0%, #FFCF8C 100%);
+  position: relative;
+}
+
+.refresh-tip {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.refresh-tip:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.loading-tip {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.quote-content {
+  padding: 10px 0;
+}
+
+.quote {
+  font-size: 1rem;
+  font-style: italic;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.author {
+  text-align: right;
+  font-weight: 500;
+  color: #555;
+}
+
+// Make ion-content scrollable
+ion-content {
+  --padding-bottom: 32px;
 }

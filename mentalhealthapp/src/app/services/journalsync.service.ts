@@ -35,6 +35,12 @@ interface JournalEntry {
   ]
 })
 export class JournalPage implements OnInit {
+getPreviewText(arg0: string) {
+throw new Error('Method not implemented.');
+}
+viewEntry(_t83: JournalEntry) {
+throw new Error('Method not implemented.');
+}
   journalEntry = '';
   currentMood = '';
   entryTags: string[] = [];

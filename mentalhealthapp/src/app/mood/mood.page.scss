@@ -1,14 +1,87 @@
-ion-card {
-    margin: 10px;
-    padding: 20px;
-    text-align: center;
-    background-color: #f8f8f8;
-    border-radius: 15px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  ion-card-title {
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
+ion-content {
+  --background: transparent;
+}
+
+.mood-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.mood-content {
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.mood-icon {
+  font-size: 120px;
+  margin-bottom: 20px;
+}
+
+.mood-icon ion-icon {
+  font-size: 120px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.mood-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.swipe-instructions {
+  margin: 30px 0;
+  color: rgba(0, 0, 0, 0.6);
+  font-style: italic;
+}
+
+.swipe-indicator {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.swipe-indicator span {
+  width: 10px;
+  height: 10px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 50%;
+  margin: 0 5px;
+  transition: background-color 0.3s ease;
+}
+
+.swipe-indicator span.active {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+.mood-actions {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  right: 0;
+  padding: 0 20px;
+}
+
+/* Animation for mood transitions */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mood-content {
+  animation: fadeIn 0.3s ease;
+}

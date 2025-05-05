@@ -1,6 +1,4 @@
-// src/app/journal/journal.page.ts
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent, IonLabel, IonItem, 
   IonTextarea, IonButton, IonCard, IonCardHeader, IonCardTitle, 
@@ -9,15 +7,15 @@ import {
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { addIcons } from 'ionicons';
 import { 
   bookOutline, 
-  addOutline, 
+  timeOutline, 
+  calendarOutline, 
+  trashOutline, 
   closeCircle, 
-  calendarOutline,
-  timeOutline,
-  trashOutline
+  addOutline 
 } from 'ionicons/icons';
-import { addIcons } from 'ionicons';
 import { StorageService } from '../services/storage.service';
 
 interface JournalEntry {
@@ -51,18 +49,10 @@ export class JournalPage implements OnInit {
   private readonly STORAGE_KEY = 'journalEntries';
   
   constructor(
-    private storageService: StorageService,
-    private alertController: AlertController
+    private storageService: StorageService
   ) {
     // Initialize icons
-    addIcons({
-      'book-outline': bookOutline,
-      'add-outline': addOutline,
-      'close-circle': closeCircle,
-      'calendar-outline': calendarOutline,
-      'time-outline': timeOutline,
-      'trash-outline': trashOutline
-    });
+    addIcons({'bookOutline':bookOutline,'timeOutline':timeOutline,'calendarOutline':calendarOutline,'trashOutline':trashOutline,'closeCircle':closeCircle,'addOutline':addOutline});
   }
 
   async ngOnInit() {
@@ -87,7 +77,7 @@ export class JournalPage implements OnInit {
 
   async saveJournalEntry() {
     if (this.journalEntry.trim() === '') {
-      this.presentAlert('Empty Entry', 'Please write something in your journal before saving.');
+      alert('Please write something in your journal before saving.');
       return;
     }
 
@@ -107,8 +97,6 @@ export class JournalPage implements OnInit {
     this.journalEntry = '';
     this.currentMood = '';
     this.entryTags = [];
-    
-    this.presentAlert('Success', 'Your journal entry has been saved!');
   }
 
   private async saveEntriesToStorage() {
@@ -120,53 +108,14 @@ export class JournalPage implements OnInit {
   }
 
   async deleteEntry(entryId: string) {
-    const alert = await this.alertController.create({
-      header: 'Confirm Deletion',
-      message: 'Are you sure you want to delete this journal entry? This action cannot be undone.',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel'
-        },
-        {
-          text: 'Delete',
-          role: 'destructive',
-          handler: async () => {
-            const entryIndex = this.entries.findIndex(e => e.id === entryId);
-            if (entryIndex !== -1) {
-              this.entries.splice(entryIndex, 1);
-              await this.saveEntriesToStorage();
-            }
-          }
-        }
-      ]
-    });
-
-    await alert.present();
-  }
-
-  // Add the missing viewEntry method
-  viewEntry(entry: JournalEntry) {
-    // For now, just show an alert with the entry content
-    this.presentAlert(
-      entry.mood || 'Journal Entry', 
-      entry.text
-    );
-  }
-
-  // Add the missing getPreviewText method
-  getPreviewText(text: string, maxLength = 100): string {
-    return text.length <= maxLength ? text : `${text.substring(0, maxLength)}...`;
-  }
-
-  async presentAlert(header: string, message: string) {
-    const alert = await this.alertController.create({
-      header,
-      message,
-      buttons: ['OK']
-    });
-
-    await alert.present();
+    const confirmed = confirm('Are you sure you want to delete this journal entry?');
+    if (!confirmed) return;
+    
+    const entryIndex = this.entries.findIndex(e => e.id === entryId);
+    if (entryIndex !== -1) {
+      this.entries.splice(entryIndex, 1);
+      await this.saveEntriesToStorage();
+    }
   }
 
   setMood(mood: string) {
@@ -174,38 +123,15 @@ export class JournalPage implements OnInit {
   }
 
   addTag(tag: string) {
-    // You can implement a more sophisticated tag adding here
-    // For now, just prompt for a tag name
-    this.promptForTag();
-  }
-
-  async promptForTag() {
-    const alert = await this.alertController.create({
-      header: 'Add Tag',
-      inputs: [
-        {
-          name: 'tag',
-          type: 'text',
-          placeholder: 'Enter tag name'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel'
-        },
-        {
-          text: 'Add',
-          handler: (data) => {
-            if (data.tag.trim() !== '') {
-              this.entryTags.push(data.tag.trim());
-            }
-          }
-        }
-      ]
-    });
-
-    await alert.present();
+    // If the tag is 'newTag', prompt the user for a custom tag
+    if (tag === 'newTag') {
+      const customTag = prompt('Enter a tag:');
+      if (customTag && customTag.trim() !== '' && !this.entryTags.includes(customTag)) {
+        this.entryTags.push(customTag);
+      }
+    } else if (tag && !this.entryTags.includes(tag)) {
+      this.entryTags.push(tag);
+    }
   }
 
   removeTag(index: number) {
@@ -214,12 +140,43 @@ export class JournalPage implements OnInit {
 
   getFormattedDate(dateString: string): string {
     const date = new Date(dateString);
+    const today = new Date();
+    
+    // For today's entries, show "Today"
+    if (date.toDateString() === today.toDateString()) {
+      return 'Today';
+    }
+    
+    // For yesterday's entries, show "Yesterday"
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if (date.toDateString() === yesterday.toDateString()) {
+      return 'Yesterday';
+    }
+    
+    // For entries within the last week, show the day name
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    if (date > oneWeekAgo) {
+      return date.toLocaleDateString('en-US', { weekday: 'long' });
+    }
+    
+    // For older entries, show the full date
     return date.toLocaleDateString('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+      year: 'numeric'
     });
+  }
+
+  getPreviewText(text: string): string {
+    if (!text) return '';
+    return text.length > 50 ? text.substring(0, 50) + '...' : text;
+  }
+
+  viewEntry(entry: JournalEntry) {
+    // For now, just display an alert with the entry details
+    // Later you could navigate to a detail page
+    alert(`${entry.mood || 'Journal Entry'}\n\n${entry.text}`);
   }
 }

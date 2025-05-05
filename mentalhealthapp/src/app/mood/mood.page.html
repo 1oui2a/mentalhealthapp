@@ -1,26 +1,31 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Mood Picker</ion-title>
+    <ion-title>How are you feeling today?</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <ion-card *ngFor="let mood of moods" 
-            [ngStyle]="{'background-color': getMoodColour(mood)}"
-            (click)="selectMood(mood)">
-    <ion-card-header>
-      <ion-card-title>{{ mood }}</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p>Swipe or tap to select your mood for today.</p>
-    </ion-card-content>
-  </ion-card>
+<ion-content class="ion-padding">
+  <div #moodContainer class="mood-container" [ngStyle]="{'background-color': getMoodColour(selectedMood || 'Happy')}">
+    <div class="mood-content">
+      <div class="mood-icon">
+        <ion-icon [name]="getCurrentMoodIcon()" size="large"></ion-icon>
+      </div>
 
-  <ion-footer>
-    <ion-toolbar>
-      <ion-title>
-        Selected Mood: {{ selectedMood || 'None' }}
-      </ion-title>
-    </ion-toolbar>
-  </ion-footer>
+      <h1 class="mood-title">{{selectedMood}}</h1>
+      
+      <div class="swipe-instructions">
+        <p>Swipe left or right to see different moods</p>
+        <div class="swipe-indicator">
+          <span *ngFor="let mood of moods; let i = index" 
+                [ngClass]="{'active': i === currentMoodIndex}"></span>
+        </div>
+      </div>
+      
+      <div class="mood-actions">
+        <ion-button expand="block" color="light" (click)="confirmMoodSelection()">
+          This is my mood today
+        </ion-button>
+      </div>
+    </div>
+  </div>
 </ion-content>

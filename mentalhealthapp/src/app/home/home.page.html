@@ -1,48 +1,82 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Home
-    </ion-title>
+    <ion-title>Home</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Home</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <h1>Welcome to Mental Health App</h1>
+  <p>Here are some resources to help you manage your mental health.</p>
 
-  <div class="home-header">
-    <h1>Welcome to Mental Health App</h1>
-    <p>Here are some resources to help you manage your mental health.</p>
+  <!-- Feature Cards -->
+  <div class="feature-cards">
+    <ion-card routerLink="/journal" class="journal-card">
+      <ion-card-header>
+        <ion-card-title>Journal</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>Tips for Mental Health</ion-card-content>
+    </ion-card>
+
+    <ion-card routerLink="/mood" class="mood-card">
+      <ion-card-header>
+        <ion-card-title>Mood Log</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>Tips for Mental Health</ion-card-content>
+    </ion-card>
+
+    <ion-card routerLink="/meditation" class="meditation-card">
+      <ion-card-header>
+        <ion-card-title>Meditation</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>Tips for Mental Health</ion-card-content>
+    </ion-card>
   </div>
 
-  <ion-card class="home-card1 ion-activatable" [routerLink]="['/journal']" routerDirection="forward">
-    <ion-card-header>
-      <ion-card-title>Journal</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Tips for Mental Health
-    </ion-card-content>
-  </ion-card>
+  <!-- Recent Journal Entries Section -->
+  <div class="recent-entries">
+    <h2>Recent Journal Entries</h2>
+    
+    <ion-list *ngIf="recentEntries.length > 0">
+      <ion-item button detail="true" *ngFor="let entry of recentEntries" [routerLink]="['/journal', entry.id]">
+        <ion-label>
+          <h3>{{ entry.title }}</h3>
+          <p>{{ getFormattedDate(entry.date) }}</p>
+          <p class="entry-preview">{{ getPreview(entry.content) }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
 
-  <ion-card class="home-card2" routerLink="/mood"> <!-- two different types of router links used -->
-    <ion-card-header>
-      <ion-card-title>Mood Log</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Tips for Mental Health
-    </ion-card-content>
-  </ion-card>
+    <div class="empty-state" *ngIf="recentEntries.length === 0">
+      <p>No journal entries yet. Start writing today!</p>
+      <ion-button routerLink="/journal/new">Create First Entry</ion-button>
+    </div>
 
-  <ion-card class="home-card3" routerLink="/meditation">
-    <ion-card-header>
-      <ion-card-title>Meditation</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      Tips for Mental Health
-    </ion-card-content>
-  </ion-card>
- 
+    <div class="view-all" *ngIf="recentEntries.length > 0">
+      <ion-button fill="clear" routerLink="/journal">
+        View All Journal Entries
+        <ion-icon name="chevron-forward-outline" slot="end"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Daily Tip Section -->
+  <div class="daily-tip">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-subtitle>Today's Wellness Quote</ion-card-subtitle>
+        <div class="refresh-tip" (click)="refreshWellnessTip()">
+          <ion-icon name="refresh-outline"></ion-icon>
+        </div>
+      </ion-card-header>
+      <ion-card-content>
+        <div *ngIf="isLoadingTip" class="loading-tip">
+          <ion-spinner name="dots"></ion-spinner>
+        </div>
+        <div *ngIf="!isLoadingTip" class="quote-content">
+          <p class="quote">{{dailyTip.quote}}</p>
+          <p class="author">— {{dailyTip.author}}</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
