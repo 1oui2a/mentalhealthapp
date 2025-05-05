@@ -15,10 +15,12 @@
       
       <div class="swipe-instructions">
         <p>Swipe left or right to see different moods</p>
+       
         <div class="swipe-indicator">
           <span *ngFor="let mood of moods; let i = index" 
                 [ngClass]="{'active': i === currentMoodIndex}"></span>
         </div>
+      
       </div>
       
       <div class="mood-actions">

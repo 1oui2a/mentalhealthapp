@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { 
   IonHeader, 
   IonToolbar, 
@@ -21,6 +22,7 @@ import {
 import { addIcons } from 'ionicons';
 import { chevronForwardOutline, refreshOutline } from 'ionicons/icons';
 import { WellnessTipService, WellnessTip } from '../services/wellness-tip.service';
+import { MoodService, MoodEntry } from '../services/mood.service';
 
 interface JournalEntry {
   id: string;
@@ -60,6 +62,7 @@ export class HomePage implements OnInit {
   recentEntries: JournalEntry[] = [];
   dailyTip: WellnessTip = { quote: '', author: '' };
   isLoadingTip: boolean = true;
+  currentMood: MoodEntry | null = null;
   
   // Simulate journal entries since we don't have your actual JournalService
   // Remove this when you connect to your real service
@@ -85,17 +88,22 @@ export class HomePage implements OnInit {
   ];
   
   constructor(
-    private wellnessTipService: WellnessTipService
+    private wellnessTipService: WellnessTipService,
+    private moodService: MoodService,
+    private router: Router
   ) {
-    addIcons({
-      'chevron-forward-outline': chevronForwardOutline,
-      'refresh-outline': refreshOutline
-    });
+    addIcons({'chevronForwardOutline':chevronForwardOutline,'refreshOutline':refreshOutline});
   }
 
   ngOnInit() {
     this.loadRecentEntries();
     this.loadWellnessTip();
+    this.loadCurrentMood();
+  }
+
+  ionViewWillEnter() {
+    // Reload mood data when page is entered (in case it changed)
+    this.loadCurrentMood();
   }
 
   loadRecentEntries() {
@@ -119,6 +127,16 @@ export class HomePage implements OnInit {
       this.dailyTip = tip;
       this.isLoadingTip = false;
     });
+  }
+
+  loadCurrentMood() {
+    this.moodService.getCurrentMood().subscribe(mood => {
+      this.currentMood = mood;
+    });
+  }
+
+  updateMood() {
+    this.router.navigate(['/mood']);
   }
   
   getFormattedDate(date: Date): string {
@@ -158,5 +176,9 @@ export class HomePage implements OnInit {
     // Create a preview of the journal content (first 100 characters)
     if (!content) return '';
     return content.length > 100 ? content.substring(0, 100) + '...' : content;
+  }
+
+  getFormattedTimestamp(timestamp: string): string {
+    return this.moodService.getFormattedTimestamp(timestamp);
   }
 }

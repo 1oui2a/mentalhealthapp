@@ -8,27 +8,46 @@
   <h1>Welcome to Mental Health App</h1>
   <p>Here are some resources to help you manage your mental health.</p>
 
+  <!-- Current Mood Card (shows only when a mood is selected) -->
+  <div *ngIf="currentMood" class="current-mood-card">
+    <ion-card [ngStyle]="{'background-color': currentMood.color}">
+      <ion-card-header>
+        <ion-card-subtitle>Your Current Mood</ion-card-subtitle>
+        <ion-card-title class="mood-title">
+          <ion-icon [name]="currentMood.icon"></ion-icon>
+          {{ currentMood.mood }}
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="mood-timestamp">{{ getFormattedTimestamp(currentMood.timestamp) }}</p>
+        <ion-button fill="clear" size="small" (click)="updateMood()">
+          Change My Mood
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
   <!-- Feature Cards -->
   <div class="feature-cards">
     <ion-card routerLink="/journal" class="journal-card">
       <ion-card-header>
         <ion-card-title>Journal</ion-card-title>
       </ion-card-header>
-      <ion-card-content>Tips for Mental Health</ion-card-content>
+      <ion-card-content>Record your thoughts and feelings</ion-card-content>
     </ion-card>
 
     <ion-card routerLink="/mood" class="mood-card">
       <ion-card-header>
         <ion-card-title>Mood Log</ion-card-title>
       </ion-card-header>
-      <ion-card-content>Tips for Mental Health</ion-card-content>
+      <ion-card-content>Track your emotional state</ion-card-content>
     </ion-card>
 
     <ion-card routerLink="/meditation" class="meditation-card">
       <ion-card-header>
         <ion-card-title>Meditation</ion-card-title>
       </ion-card-header>
-      <ion-card-content>Tips for Mental Health</ion-card-content>
+      <ion-card-content>Practice mindfulness</ion-card-content>
     </ion-card>
   </div>
 

@@ -11,6 +11,40 @@ h2 {
   font-weight: 500;
 }
 
+// Current mood card styling
+.current-mood-card {
+  margin: 1.5rem 0;
+  
+  ion-card {
+    margin: 0;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: background-color 0.3s ease;
+  }
+
+  .mood-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.8rem;
+    color: #333;
+    
+    ion-icon {
+      margin-right: 10px;
+      font-size: 2rem;
+    }
+  }
+
+  .mood-timestamp {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 10px;
+  }
+
+  ion-button {
+    margin-top: 8px;
+  }
+}
+
 // Feature cards styling
 .feature-cards {
   display: flex;
